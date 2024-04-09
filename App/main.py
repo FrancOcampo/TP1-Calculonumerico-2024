@@ -4,6 +4,17 @@ import numpy as np
 from numpy import array
 from matplotlib import pyplot as plt
 
+
+def mostrarGraficaTrasformadda(trafo_fourier,nombre):
+    plt.figure() # Crear una nueva figura
+    plt.plot(np.abs(trafo_fourier)) # Graficar los valores absolutos de los coeficientes de Fourier
+    plt.title("Transformada de Fourier para "+nombre)
+    plt.xlabel("Frecuencia")
+    plt.ylabel("Amplitud")
+    plt.show() # Mostrar la figura
+    return
+    
+
 def mostrarGrafica(x,y,nombre):
  plt.figure()
  plt.title(nombre)
@@ -27,6 +38,7 @@ def descomprimirTxt(archivo):
         retorno.append(ft_np)
         return retorno
 
+
 ruta = pathlib.Path('.')
 
 ruta = ruta / "QuakeProgram" / "Imputs"
@@ -40,34 +52,24 @@ archivo = ruta / respuesta
 
 while respuesta!="exit":
     if archivo.exists():
-                
-        # Leer los datos de los archivos
-        datos= descomprimirTxt(archivo)
-        # datos = np.loadtxt(archivo)
-        # tiempo, datos= np.loadtxt(archivo, unpack=True)
+        
+        datos_arreglo=descomprimirTxt(archivo) #Descomprimimos el txt en una lista donde el primer elemento es el t y el segundo elemento el Ft, guarados en arreglos .np
 
-        # Aplicar la Transformada de Fourier Discreta a los datos
-        # coeficientes1 = np.fft.fft(datos[1])
-        trafo_fourier = np.fft.fft(datos[1]) # Transformada de Fourier
+        mostrarGrafica(datos_arreglo[0],datos_arreglo[1],nombre) #muestra la grafica del terremoto donde x es el tiempo y el y amplitud
 
-        # Imprimir los coeficientes de Fourier
-        # print("Coeficientes de Fourier para terremoto1.txt:", coeficientes1)
-        plt.figure() # Crear una nueva figura
-        plt.plot(np.abs(trafo_fourier)) # Graficar los valores absolutos de los coeficientes de Fourier
-        plt.title("Transformada de Fourier para "+nombre)
-        plt.xlabel("Frecuencia")
-        plt.ylabel("Amplitud")
-        plt.show() # Mostrar la figura
+        trafo_fourier = np.fft.fft(datos_arreglo[1]) #Sacamos los coeficientes de la serie de fourier para cada pto
 
-        # grafica=descomprimirTxt(archivo)
+        print(trafo_fourier)
 
-        mostrarGrafica(datos[0],datos[1],nombre)
+        mostrarGraficaTrasformadda(trafo_fourier,nombre) #mostramos la grafica de la trasformada
 
-        respuesta = "exit"
+        respuesta = "exit" #salimos del while
     else:
+        #Caso de ingresar mal el archivo
         print('No existe el archivo seleccionado')
         respuesta = input('Ingrese el nombre del archivo [exit para salir]: ')
         archivo = ruta / respuesta
         nombre = respuesta
+
 
 
